@@ -5,9 +5,9 @@ const fs = require('fs').promises;
 async function main() {
   // Creates a client
   const bigqueryClient = new BigQuery();
-  const udf = await fs.readFile("./udf.sql", "utf8");
-  const normalized_names = await fs.readFile("./norm.sql", "utf8");
-  const refunds = await fs.readFile("./refund.sql", "utf8");
+  const udf = await fs.readFile("./query/udf.sql", "utf8");
+  const normalized_names = await fs.readFile("./query/norm.sql", "utf8");
+  const refunds = await fs.readFile("./query/refund.sql", "utf8");
   const query = `
   ${udf}
   WITH normalized_names AS
@@ -21,7 +21,7 @@ async function main() {
   console.log({query})
   // Create the dataset
   const result = await bigqueryClient.query(query);
-  await fs.writeFile("./result.json", JSON.stringify(result),{
+  await fs.writeFile("./data/result.json", JSON.stringify(result),{
     encoding: "utf8",
     flag: "w"
   } );

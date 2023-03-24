@@ -6,8 +6,8 @@ const fs = require('fs').promises;
 async function main() {
   // Creates a client
   const bigqueryClient = new BigQuery();
-  const udf = await fs.readFile("./udf.sql", "utf8");
-  const normalized_names = await fs.readFile("./norm.sql", "utf8");
+  const udf = await fs.readFile("./query/udf.sql", "utf8");
+  const normalized_names = await fs.readFile("./query/norm.sql", "utf8");
   const query = `
   ${udf}
   WITH normalized_names AS

@@ -91,7 +91,7 @@ async function main() {
   console.log({query})
   // Create the dataset
   const result = await bigqueryClient.query(query);
-  await fs.writeFile("./refund_name_history.json", JSON.stringify(result),{
+  await fs.writeFile("./data/refund_name_history.json", JSON.stringify(result),{
     encoding: "utf8",
     flag: "w"
   } );
