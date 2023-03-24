@@ -1,0 +1,15 @@
+{
+  "name": "normalise-refund",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Makoto Inoue",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/bigquery": "^6.1.0",
+    "@google-cloud/storage": "^6.9.4"
+  }
+}
