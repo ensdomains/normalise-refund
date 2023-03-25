@@ -6,9 +6,9 @@ const labelhash = '0x021218b8e35bf318f4a3fc540a1ab99ad60948c67c20fa923f1975a26c8
 async function main() {
   // Creates a client
   const bigqueryClient = new BigQuery();
-  const udf = await fs.readFile("./udf.sql", "utf8");
-  const normalized_names = await fs.readFile("./norm.sql", "utf8");
-  const refunds = await fs.readFile("./refund.sql", "utf8");
+  const udf = await fs.readFile("./query/udf.sql", "utf8");
+  const normalized_names = await fs.readFile("./query/norm.sql", "utf8");
+  const refunds = await fs.readFile("./query/refund.sql", "utf8");
   const query = `
   ${udf}
   WITH normalized_names AS
@@ -78,11 +78,10 @@ async function main() {
             where labelhash in (select distinct(labelhash) from normalized_names)
             UNION ALL 
             select \`ens-manager.airdrop.int_str_to_hash\`(value) AS labelhash, null as label, value as tokenid, transaction_hash, block_timestamp as event_timestamp, null as start_time, null as end_time, 'transfer' as event, from_address as prev_owner, to_address as owner, null as cost FROM  \`bigquery-public-data.crypto_ethereum.token_transfers\` WHERE  token_address = "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
-            AND value in (select distinct(LABELHASH_TO_TOKEN_ID(labelhash)) from normalized_names
-          )
-        ) as registration_periods
-        LEFT JOIN \`bigquery-public-data.crypto_ethereum.transactions\` as transactions ON registration_periods.transaction_hash = transactions.hash
-        ORDER BY block_number, transaction_index
+            AND value in (select distinct(LABELHASH_TO_TOKEN_ID(labelhash)) from normalized_names)
+          ) as registration_periods
+          LEFT JOIN \`bigquery-public-data.crypto_ethereum.transactions\` as transactions ON registration_periods.transaction_hash = transactions.hash
+          ORDER BY block_number, transaction_index
         )
         ORDER BY event_timestamp    
     )
