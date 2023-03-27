@@ -3,6 +3,7 @@
     NAME_TO_LABELHASH(eth_ens_namehash_2_0_15(label)) as old_hash,
     NAME_TO_LABELHASH(ens_normalize(label)) as new_hash,
     labelhash,
+    LABELHASH_TO_TOKEN_ID(labelhash) as tokenid,
     IF((NAME_TO_LABELHASH(eth_ens_namehash_2_0_15(label)) = labelhash), 1, 0) as is_oldhash,
     IF((NAME_TO_LABELHASH(ens_normalize(label)) = labelhash), 1, 0) as is_newhash,
     IF((NAME_TO_LABELHASH(ens_normalize(label)) != labelhash AND NAME_TO_LABELHASH(eth_ens_namehash_2_0_15(label)) != labelhash ), 1, 0) as is_neither,

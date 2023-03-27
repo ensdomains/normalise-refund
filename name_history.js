@@ -73,11 +73,23 @@ async function main() {
             PARTITION BY labelhash
         ) as total_gas_spent,
         * from (
-          select labelhash, tokenid, label, registration_periods.event_timestamp, start_time, end_time, registration_periods.event, prev_owner, owner, transactions.block_number, transactions.transaction_index, SAFE_DIVIDE(transactions.receipt_gas_used * transactions.gas_price, 1000000000000000000) as gas_spent, cost from (
-            select labelhash, label, LABELHASH_TO_TOKEN_ID(labelhash) as tokenid, transaction_hash, event_timestamp, start_time, end_time, event, null as prev_owner, null as owner, cost from  \`ens-manager.registrations.registration_periods_view\` registration_periods
+          select labelhash, tokenid, label, registration_periods.event_timestamp, start_time, end_time, registration_periods.event, prev_owner, owner, transactions.block_number, transactions.transaction_index,
+          SAFE_DIVIDE(transactions.receipt_gas_used * transactions.gas_price, 1000000000000000000) as gas_spent,
+          cost, cost_usd, base_cost_usd, ether_price,
+          CASE WHEN cost_usd - base_cost_usd > 5  THEN (cost_usd - base_cost_usd)  ELSE NULL END AS premium_usd,
+          CASE WHEN cost_usd - base_cost_usd > 5  THEN ((cost_usd - base_cost_usd) / ether_price)  ELSE NULL END AS premium_eth,
+          from (
+            select labelhash, label, LABELHASH_TO_TOKEN_ID(labelhash) as tokenid, transaction_hash, event_timestamp, start_time, end_time, event, null as prev_owner, null as owner,
+            cost,
+            cost * ether_price as cost_usd,
+            CASE WHEN character_length(label) = 3 THEN 0.000020294266869609 WHEN character_length(label) = 4 THEN 0.000005073566717402 ELSE 0.000000158548959919 END * TIMESTAMP_DIFF(end_time, start_time, SECOND) AS base_cost_usd,
+            ether_price,  
+            from  \`ens-manager.registrations.registration_periods_view\` registration_periods
             where labelhash in (select distinct(labelhash) from normalized_names)
             UNION ALL 
-            select \`ens-manager.airdrop.int_str_to_hash\`(value) AS labelhash, null as label, value as tokenid, transaction_hash, block_timestamp as event_timestamp, null as start_time, null as end_time, 'transfer' as event, from_address as prev_owner, to_address as owner, null as cost FROM  \`bigquery-public-data.crypto_ethereum.token_transfers\` WHERE  token_address = "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
+            select \`ens-manager.airdrop.int_str_to_hash\`(value) AS labelhash, null as label, value as tokenid, transaction_hash, block_timestamp as event_timestamp, null as start_time, null as end_time, 'transfer' as event, from_address as prev_owner, to_address as owner,
+            null as cost, null as cost_usd, null as base_cost_usd, null as ether_price,
+            FROM  \`bigquery-public-data.crypto_ethereum.token_transfers\` WHERE  token_address = "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85"
             AND value in (select distinct(LABELHASH_TO_TOKEN_ID(labelhash)) from normalized_names)
           ) as registration_periods
           LEFT JOIN \`bigquery-public-data.crypto_ethereum.transactions\` as transactions ON registration_periods.transaction_hash = transactions.hash
