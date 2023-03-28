@@ -72,8 +72,9 @@ async function main() {
         sum(gas_spent) OVER ( 
             PARTITION BY labelhash
         ) as total_gas_spent,
+
         * from (
-          select labelhash, tokenid, label, registration_periods.event_timestamp, start_time, end_time, registration_periods.event, prev_owner, owner, transactions.block_number, transactions.transaction_index,
+          select transactions.hash as transactionhash, labelhash, tokenid, label, registration_periods.event_timestamp, start_time, end_time, registration_periods.event, prev_owner, owner, transactions.block_number, transactions.transaction_index,
           SAFE_DIVIDE(transactions.receipt_gas_used * transactions.gas_price, 1000000000000000000) as gas_spent,
           cost, cost_usd, base_cost_usd, ether_price,
           CASE WHEN cost_usd - base_cost_usd > 5  THEN (cost_usd - base_cost_usd)  ELSE NULL END AS premium_usd,

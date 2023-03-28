@@ -13,14 +13,18 @@ index.js name_history.js norm_test.js
 Extract time, event, and last owner of '†††'
 
 ```
-cat refund_name_history.json | jq '.[0][] | select(.fulllabel == "٥۰۰٥")| {"time":.event_timestamp.value, event, last_owner}'
+cat refund_name_history.json | jq '.[0][] | select(.fulllabel == "🦫‍➡🦫‍➡")| {"time":.event_timestamp.value, gas_spent, event, last_owner, transactionhash}'
 ```
+
+cat refund_name_history.json | jq '.[0][] | select(.transactionhash == "0x37f3cc8aca3f15366999f2ffe3dbe7769da3dcf11331bf8355e9efa4de63d8d7")| {fulllabel,"time":.event_timestamp.value, gas_spent, event, last_owner, transactionhash} | ( to_entries | map(.value))| @csv'
+
+cat refund_name_history.json | jq '.[0][] | select(.labelhash == "0xf38549b9af39c71928cfcdc5aa267ba98c35e84f425c4ba3b5fdd404530fc9c8")| {"time":.event_timestamp.value, event, last_owner}'
 
 Convert into csv
 
 ```
-echo "label,tokenid, event_timestamp, event, start_time,end_time, prev_owner, owner, gas_spent, cost, total_cost, total_remmaining, last_cost, last_remmaining, base_cost_usd, premium_usd,premium_eth,last_owner" > refund_name_history.csv
-cat refund_name_history.json | jq '.[0] | sort_by(.total_cost)[] | select(.RANK == 1) | {fulllabel, tokenid,"event_timestamp":.event_timestamp.value,event,"start_time":.start_time.value,"end_time":.end_time.value, prev_owner, owner, gas_spent, cost, total_cost, total_remmaining, last_cost, last_remmaining, base_cost_usd, premium_usd,premium_eth,last_owner } | ( to_entries | map(.value))| @csv' >> refund_name_history.csv
+echo "label,tokenid, event_timestamp, event, start_time,end_time, prev_owner, owner, gas_spent, cost, total_cost, total_remmaining, last_cost, last_remmaining, base_cost_usd, premium_usd,premium_eth,last_owner, transactionhash" > refund_name_history.csv
+cat refund_name_history.json | jq '.[0] | sort_by(.total_cost)[] | select(.RANK == 1) | {fulllabel, tokenid,"event_timestamp":.event_timestamp.value,event,"start_time":.start_time.value,"end_time":.end_time.value, prev_owner, owner, gas_spent, cost, total_cost, total_remmaining, last_cost, last_remmaining, base_cost_usd, premium_usd,premium_eth,last_owner, transactionhash } | ( to_entries | map(.value))| @csv' >> refund_name_history.csv
 ```
 
 Find if 'matoken' gets refund
