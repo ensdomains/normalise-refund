@@ -1,3 +1,4 @@
+norm AS(
   select 
     label,
     NAME_TO_LABELHASH(eth_ens_namehash_2_0_15(label)) as old_hash,
@@ -38,3 +39,4 @@
   group by label, labelhash
   -- having max_end_date > DATE_ADD(TIMESTAMP("2023-02-26 22:56:27+00"), INTERVAL -90 DAY)
   having CAST(max_end_date as DATE) > CAST(CURRENT_DATE() as DATE)
+)

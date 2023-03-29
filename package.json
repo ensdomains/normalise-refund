@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@google-cloud/bigquery": "^6.1.0",
-    "@google-cloud/storage": "^6.9.4"
+    "@google-cloud/storage": "^6.9.4",
+    "json2csv": "^6.0.0-alpha.2"
   }
 }
