@@ -11,7 +11,7 @@ w_term_number as (
   ) as fulllabel,
   FIRST_VALUE(owner IGNORE NULLS) OVER ( 
     PARTITION BY labelhash
-    ORDER BY event_timestamp desc range between unbounded preceding and unbounded following
+    ORDER BY event_timestamp desc, log_index desc range between unbounded preceding and unbounded following
   ) as last_owner,
   -- sum(gas_spent) OVER( PARTITION BY labelhash) as sum_gas_spent,
   * from events
