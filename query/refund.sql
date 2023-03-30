@@ -13,7 +13,6 @@ w_term_number as (
     PARTITION BY labelhash
     ORDER BY event_timestamp desc, log_index desc range between unbounded preceding and unbounded following
   ) as last_owner,
-  -- sum(gas_spent) OVER( PARTITION BY labelhash) as sum_gas_spent,
   * from events
   order by labelhash,event_timestamp asc, start_period asc
 ),
@@ -42,6 +41,6 @@ ROW_NUMBER() OVER(PARTITION BY labelhash ORDER BY event_timestamp asc, event_pri
 premium as last_premium,
 last_cost * (remaining / max_start_duration) as last_remmaining_cost,
 total_cost * (remaining / duration) as total_remmaining_cost,
--- max(sum_gas_spent)  OVER( PARTITION BY labelhash) as total_gas_spent,
+sum(gas_spent) OVER( PARTITION BY labelhash) as total_gas_spent,
 * from w_duration order by event_timestamp,event_priority
 )

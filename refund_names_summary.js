@@ -28,7 +28,8 @@ async function main() {
     sum(user_premium) as total_premium,
     sum(user_cost) as last_remaining_cost,
     sum(total_user_cost) as total_all_cost,
-    sum(last_user_cost) as last_all_cost
+    sum(last_user_cost) as last_all_cost,
+    sum(total_gas_spent) as total_gas_spent,
   from refund_addresses
   `
 
