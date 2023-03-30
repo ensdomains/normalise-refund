@@ -1,6 +1,7 @@
 // Imports the Google Cloud client library
 const {BigQuery} = require('@google-cloud/bigquery');
 const fs = require('fs').promises;
+const { parseAsync } = require("json2csv")
 // ᴇᴛʜᴇʀᴇᴜᴍ
 async function main() {
   // Creates a client
@@ -27,6 +28,8 @@ async function main() {
     flag: "w"
   } );
   const result = await bigqueryClient.query(query);
+  const csv = await parseAsync(result[0], {});
+  await fs.writeFile("./data/refund_names_w_events.csv", csv, { encoding: "utf-8", flag:"w" })
   await fs.writeFile("./data/refund_names_w_events.json", JSON.stringify(result),{
     encoding: "utf8",
     flag: "w"

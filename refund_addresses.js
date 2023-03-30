@@ -1,5 +1,6 @@
 // Imports the Google Cloud client library
 const {BigQuery} = require('@google-cloud/bigquery');
+const { parseAsync } = require("json2csv")
 
 const fs = require('fs').promises;
 
@@ -13,6 +14,7 @@ async function main() {
   const events = await fs.readFile("./query/events.sql", "utf8");
   const refund = await fs.readFile("./query/refund.sql", "utf8");
   const refund_addresses = await fs.readFile("./query/refund_addresses.sql", "utf8");
+
   const query = `
   ${udf}
   WITH
@@ -21,24 +23,23 @@ async function main() {
   ${events},
   ${refund},
   ${refund_addresses}
-  select
-    count(*) as total_addresses,
-    sum(user_name) as total_names,
-    sum(user_refund) as total_refund,
-    sum(user_premium) as total_premium,
-    sum(user_cost) as last_remaining_cost,
-    sum(total_user_cost) as total_all_cost,
-    sum(last_user_cost) as last_all_cost
-  from refund_addresses
+  select last_owner as owner, user_refund as refund from refund_addresses
+  order by user_refund asc
   `
 
   console.log({query})
   // Create the dataset
-  await fs.writeFile("./data/refund_names_summary.sql", query,{
+  await fs.writeFile("./data/refund_addresses.sql", query,{
     encoding: "utf8",
     flag: "w"
   } );
   const result = await bigqueryClient.query(query);
+  const csv = await parseAsync(result[0], {});
+  await fs.writeFile("./data/refund_addresses.csv", csv, { encoding: "utf-8", flag:"w" })
+  await fs.writeFile("./data/refund_addresses.json", JSON.stringify(result),{
+    encoding: "utf8",
+    flag: "w"
+  } );
   console.log(result);
 }
 main();

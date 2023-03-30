@@ -25,17 +25,23 @@ select
 DATE_DIFF(CAST(max(end_time) OVER (PARTITION BY labelhash) as DATE), CAST(CURRENT_DATE() as DATE), DAY) as remaining,
 max(start_time) OVER ( PARTITION BY labelhash) as max_start_time,
 DATE_DIFF(max(end_time) OVER ( PARTITION BY labelhash), max(start_time) OVER ( PARTITION BY labelhash),DAY) as max_start_duration,
+DATE_DIFF(max(end_time) OVER ( PARTITION BY labelhash), min(start_time) OVER ( PARTITION BY labelhash), DAY) as duration,
+sum(cost) OVER ( 
+    PARTITION BY labelhash
+) as total_cost,
 FIRST_VALUE(cost IGNORE NULLS) OVER ( 
     PARTITION BY labelhash ORDER BY event_timestamp desc range between unbounded preceding and unbounded following
-) as last_cost,        
+) as last_cost,
 *
-from w_last_term where term_number = last_term order by event_timestamp,event_priority
+from w_last_term
+where term_number = last_term order by event_timestamp,event_priority
 )
 , refund as (
 select
 ROW_NUMBER() OVER(PARTITION BY labelhash ORDER BY event_timestamp asc, event_priority asc) as RANK,
 premium as last_premium,
 last_cost * (remaining / max_start_duration) as last_remmaining_cost,
+total_cost * (remaining / duration) as total_remmaining_cost,
 -- max(sum_gas_spent)  OVER( PARTITION BY labelhash) as total_gas_spent,
 * from w_duration order by event_timestamp,event_priority
 )
