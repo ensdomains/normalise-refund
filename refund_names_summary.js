@@ -22,14 +22,13 @@ async function main() {
   ${refund},
   ${refund_addresses}
   select
-    count(*) as total_addresses,
-    sum(user_name) as total_names,
-    sum(user_refund) as total_refund,
-    sum(user_premium) as total_premium,
-    sum(user_cost) as last_remaining_cost,
-    sum(total_user_cost) as total_all_cost,
-    sum(last_user_cost) as last_all_cost,
-    sum(total_gas_spent) as total_gas_spent,
+    count(*) as all_addresses,
+    sum(user_name) as all_names,
+    sum(user_premium) as all_premium,
+    sum(user_last_remmaining_cost) as all_last_remaining_cost,
+    sum(user_total_cost) as all_total_cost,
+    sum(user_last_cost) as all_last_cost,
+    sum(user_total_gas_spent) as all_gas_spent,
   from refund_addresses
   `
 

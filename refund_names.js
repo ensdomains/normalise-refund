@@ -23,9 +23,9 @@ async function main() {
   select fulllabel,
   labelhash,tokenid,
   max(last_owner) as last_owner, 
-  max(IFNULL(last_premium, 0)) + max(IFNULL(last_remmaining_cost, 0)) as refund, 
-  max(IFNULL(last_premium, 0)) as premium,
-  max(IFNULL(last_remmaining_cost, 0)) as cost,
+  -- max(IFNULL(premium, 0)) + max(IFNULL(last_remmaining_cost, 0)) as refund, 
+  max(IFNULL(premium, 0)) as premium,
+  max(IFNULL(last_remmaining_cost, 0)) as last_remmaining_cost,
   max(IFNULL(total_gas_spent, 0)) as total_gas_spent,
   count(*) as transactions from refund group by fulllabel,labelhash,tokenid
   `
