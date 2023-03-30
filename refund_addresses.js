@@ -23,8 +23,16 @@ async function main() {
   ${events},
   ${refund},
   ${refund_addresses}
-  select last_owner as owner, user_refund as refund from refund_addresses
-  order by user_refund asc
+  select 
+    last_owner as address,
+    user_name as names,
+    user_last_remmaining_cost as fee_last_remmaining,
+    user_last_cost as fee_last_all,
+    user_total_cost as fee_all,
+    user_premium as premium,
+    user_total_gas_spent as gas
+  from refund_addresses
+  order by user_name desc
   `
 
   console.log({query})

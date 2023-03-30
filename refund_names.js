@@ -21,11 +21,13 @@ async function main() {
   ${events},
   ${refund}
   select fulllabel,
-  labelhash,tokenid,
+  labelhash,
+  concat("https://etherscan.io/token/0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85?a=", cast(tokenid as string)) as etherscan_url,
   max(last_owner) as last_owner, 
-  -- max(IFNULL(premium, 0)) + max(IFNULL(last_remmaining_cost, 0)) as refund, 
-  max(IFNULL(premium, 0)) as premium,
   max(IFNULL(last_remmaining_cost, 0)) as last_remmaining_cost,
+  max(IFNULL(last_cost, 0)) as last_cost,
+  max(IFNULL(total_cost, 0)) as total_cost,
+  max(IFNULL(premium, 0)) as premium,
   max(IFNULL(total_gas_spent, 0)) as total_gas_spent,
   count(*) as transactions from refund group by fulllabel,labelhash,tokenid
   `
