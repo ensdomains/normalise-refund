@@ -1,5 +1,16 @@
 # Normalise refund
 
+## Prerequisite
+
+You need to have [access](https://codelabs.developers.google.com/codelabs/cloud-bigquery-python#4) to the following big query table and google storage
+
+- bigquery-public-data.crypto_ethereum.transactions
+- bigquery-public-data.crypto_ethereum.token_transfers
+- ens-manager.registrations.registration_periods_view
+- ens-manager.airdrop.int_str_to_hash
+- gs://jsassets/ens-normalize-1-9-0.js
+- gs://jsassets/eth-ens-namehash-2-0-15.js
+
 ## Scripts
 
 - refund_summary.js = Gives the summary of breakdown of the names to be refunded
