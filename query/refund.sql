@@ -33,7 +33,9 @@ FIRST_VALUE(base_cost IGNORE NULLS) OVER (
 ) as last_cost,
 *
 from w_last_term
-where term_number = last_term order by event_timestamp,event_priority
+where term_number = last_term
+AND last_owner != '0x000000000000000000000000000000000000dead'
+order by event_timestamp,event_priority
 )
 , refund as (
 select
