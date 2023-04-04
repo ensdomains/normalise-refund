@@ -1,3 +1,16 @@
+CREATE TEMP FUNCTION is_invis_spoof(arg1 STRING)
+RETURNS BOOL
+LANGUAGE js
+  OPTIONS (
+    library=['gs://jsassets/ens-normalize-1-9-0.js'])
+AS r"""
+  try{
+    return is_invis_spoof(arg1)
+  }catch(e){
+    return null;
+  }
+""";
+
 CREATE TEMP FUNCTION ens_normalize(arg1 STRING)
 RETURNS STRING
 LANGUAGE js
