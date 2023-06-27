@@ -36,8 +36,8 @@ norm AS(
     max(end_time) AS max_end_date
     -- max(end_time) OVER(PARTITION BY labelhash) AS max_end_date,
   from  `ens-manager.registrations.registration_periods`
-  -- WHERE event_timestamp < TIMESTAMP("2023-02-26 22:56:27+00")
+  WHERE event_timestamp < TIMESTAMP("2023-06-18 04:50:00+00")
   group by label, labelhash
   -- having max_end_date > DATE_ADD(TIMESTAMP("2023-02-26 22:56:27+00"), INTERVAL -90 DAY)
-  having CAST(max_end_date as DATE) > CAST(CURRENT_DATE() as DATE)
+  having CAST(max_end_date as DATE) > CAST(TIMESTAMP("2023-06-18 04:50:00+00") as DATE)
 )

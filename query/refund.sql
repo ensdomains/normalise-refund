@@ -21,7 +21,7 @@ w_last_term as (
 )
 , w_duration as (
 select
-DATE_DIFF(CAST(max(end_time) OVER (PARTITION BY labelhash) as DATE), CAST(CURRENT_DATE() as DATE), DAY) as remaining,
+DATE_DIFF(CAST(max(end_time) OVER (PARTITION BY labelhash) as DATE), CAST(TIMESTAMP("2023-06-18 04:50:00+00") as DATE), DAY) as remaining,
 max(start_time) OVER ( PARTITION BY labelhash) as max_start_time,
 DATE_DIFF(max(end_time) OVER ( PARTITION BY labelhash), max(start_time) OVER ( PARTITION BY labelhash),DAY) as max_start_duration,
 DATE_DIFF(max(end_time) OVER ( PARTITION BY labelhash), min(start_time) OVER ( PARTITION BY labelhash), DAY) as duration,

@@ -13,7 +13,7 @@ You need to have [access](https://codelabs.developers.google.com/codelabs/cloud-
 
 ## Scripts
 
-- refund_summary.js = Gives the summary of breakdown of the names to be refunded
+- refund_names_summary.js = Gives the summary of breakdown of the names to be refunded
 - refund_addresses.js = This includes all the refund candidate addresses with number of names they own, sum of premium, gas, and fee (in 3 different options)
 - refund_names.js = The breakdown of refund_address for each name the address own with the etherscan url to inspect the history of the name
 - refund_names_w_events.js = Dump the register/refund/renew history of all refund eligible names
@@ -36,3 +36,9 @@ eg: sort by total gas spent
 ```
 cat refund_names.json | jq '.[0] | sort_by(.total_gas_spent)'
 ```
+
+cat refund_names_w_events.json | jq '.[0] | sort_by(.total_gas_spent) | select(.fulllabel == "ᴇᴛʜᴇʀᴇᴜᴍ") | {gas_price} | ( to_entries | map(.value)) | @csv' > gas.csv
+
+cat refund_names_w_events.json | jq '.[0] | sort_by(.total_gas_spent)[] | select(.event == "registered") | {gas_price} | ( to_entries | map(.value)) | @csv'
+
+cat refund_names_w_events.json | jq '.[0][] | select(.event == "registered") | {gas_price} | ( to_entries | map(.value)) | @csv' > gas.csv
