@@ -35,7 +35,7 @@ norm AS(
     , 1, 0) as is_refund,
     max(end_time) AS max_end_date
     -- max(end_time) OVER(PARTITION BY labelhash) AS max_end_date,
-  from  `ens-manager.registrations.registration_periods`
+  from  `ens-manager.registrations.registration_periods_view`
   WHERE event_timestamp < TIMESTAMP("2023-06-18 04:50:00+00")
   group by label, labelhash
   -- having max_end_date > DATE_ADD(TIMESTAMP("2023-02-26 22:56:27+00"), INTERVAL -90 DAY)
